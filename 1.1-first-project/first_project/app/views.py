@@ -35,4 +35,3 @@ def workdir_view(request):
     # директории
     work = [f'{el}, ' for el in os.listdir('.')]
     return HttpResponse(work)
-    raise NotImplemented
