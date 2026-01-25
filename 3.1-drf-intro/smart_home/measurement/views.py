@@ -1,41 +1,16 @@
-from rest_framework import status
-from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView
-from rest_framework.response import Response
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, RetrieveUpdateAPIView
+from .models import Sensor, Measurement
+from .serializers import MeasurementSerializer, SensorSerializer, SensorDetailSerializer
 
 
-from measurement.models import Sensor, Measurement
-from measurement.serializers import MeasurementSerializer, SensorSerializer, SensorUpdateSerializer
-
-
-class GetSensor(ListAPIView):
+class CreateGetSensorView(ListCreateAPIView):
     queryset = Sensor.objects.all()
     serializer_class = SensorSerializer
 
-    def post(self, request):
-        serializer = SensorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class SensorView(RetrieveUpdateAPIView):
+    queryset = Sensor.objects.all()
+    serializer_class = SensorDetailSerializer
 
-
-class MeasurementList(ListAPIView):
-    queryset = Measurement.objects.all()
+class UpdateMeasurement(CreateAPIView):
+    queryset = Sensor.objects.all()
     serializer_class = MeasurementSerializer
-
-    def post(self, request):
-        serializer = MeasurementSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UpdateMeasurement(UpdateAPIView):
-    queryset = Measurement.objects.all()
-    serializer_class = SensorUpdateSerializer
-
-
-class GetSensorInstance(RetrieveAPIView):
-    queryset = Sensor.objects.all()
-    serializer_class = SensorSerializer
